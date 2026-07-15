@@ -115,6 +115,10 @@ The following table lists the configurable parameters of the YuniKorn chart and 
 | `web.goGC`                                      | Web app GC threshold (GOGC)                                                                           | `100`                           |
 | `embedAdmissionController`                      | Flag for enabling/disabling the admission controller                                                  | `true`                          |
 | `enableWebService`                              | Flag for enabling/disabling web service                                                               | `true`                          |
+| `httpRoute.enabled`                             | Flag for enabling/disabling HTTPRoute resource for Gateway API                                        | `false`                         |
+| `httpRoute.annotations`                         | Annotations for the HTTPRoute resource                                                                | `{}`                            |
+| `httpRoute.parentRefs`                          | Parent Gateway references for the HTTPRoute                                                           | `[]`                            |
+| `httpRoute.hostnames`                           | Hostnames to match for the HTTPRoute                                                                  | `[]`                            |
 | `nodeSelector`                                  | Scheduler deployment nodeSelector(s)                                                                  | `{}`                            |
 | `tolerations`                                   | Scheduler deployment tolerations                                                                      | `[]`                            |
 | `affinity`                                      | Scheduler deployment affinity                                                                         | `{}`                            |
