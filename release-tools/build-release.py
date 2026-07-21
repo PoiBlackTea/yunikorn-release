@@ -15,7 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import distutils.dir_util
 import getopt
 import hashlib
 import json
@@ -175,7 +174,7 @@ def setup_base_dir(release_top_path, helm_path, base_path, version):
 def copy_helm_charts(helm_path, base_path, version):
     print("helm patch: %s, base path: %s" % (helm_path, base_path))
     release_helm_path = os.path.join(base_path, "helm-charts")
-    distutils.dir_util.copy_tree(helm_path, release_helm_path)
+    shutil.copytree(helm_path, release_helm_path)
     # rename the version in the helm charts to the actual version
     yunikorn_chart_path = os.path.join(release_helm_path, "yunikorn")
     replace(os.path.join(yunikorn_chart_path, "values.yaml"), '(tag: .*-)(latest)', '\\g<1>' + version)
