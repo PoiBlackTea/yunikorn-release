@@ -26,8 +26,15 @@ ifeq ($(GO),)
 GO := go
 endif
 
-GO_VERSION := $(shell "$(GO)" version | awk '{print substr($$3, 3, 4)}')
 MOD_VERSION := $(shell cat .go_version)
+
+# Default GOTOOLCHAIN to auto if not explicitly set by the environment or build scripts
+ifeq ($(GOTOOLCHAIN),)
+GOTOOLCHAIN := auto
+export GOTOOLCHAIN
+endif
+
+GO_VERSION := $(shell "$(GO)" version | awk '{print substr($$3, 3, 4)}')
 
 GM := $(word 1,$(subst ., ,$(GO_VERSION)))
 MM := $(word 1,$(subst ., ,$(MOD_VERSION)))
