@@ -88,6 +88,29 @@ ingress:
   pathType: Prefix
   tls: []
 
+# HTTPRoute configuration to expose the YuniKorn UI through the Gateway API.
+# This requires the Gateway API CRDs to be installed on your cluster.
+#
+# When enabled is true, the HTTPRoute resource will be deployed.
+# Note: You must configure `parentRefs` to attach the route to an existing Gateway.
+httpRoute:
+  enabled: false
+  annotations: {}
+
+  # At least one parentRef is required to attach the route to a Gateway.
+  parentRefs: []
+  #  - group: gateway.networking.k8s.io
+  #    kind: Gateway
+  #    name: yunikorn-gateway
+  #    namespace: yunikorn
+
+  # Hostnames to match for the HTTPRoute.
+  hostnames: []
+  #  - chart-example.local
+
+  # Custom routing rules. If empty, a default rule mapping to the UI service is used.
+  # rules: []
+
 resources:
   requests:
     cpu: 200m
