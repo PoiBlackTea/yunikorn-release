@@ -38,6 +38,14 @@ def fail(message):
 # Main build routine
 def build_release(email_address):
     tools_dir = os.path.dirname(os.path.realpath(__file__))
+    root_dir = os.path.dirname(tools_dir)
+
+    # Set GOTOOLCHAIN for reproducible builds if not explicitly set
+    if "GOTOOLCHAIN" not in os.environ:
+        os.environ["GOTOOLCHAIN"] = "auto"
+    active_go_version = get_go_version()
+    print("using GOTOOLCHAIN=%s (resolved active Go compiler: %s)" % (os.environ["GOTOOLCHAIN"], active_go_version))
+
     # load configs
     config_file = os.path.join(tools_dir, "release-configs.json")
     with open(config_file) as configs:
