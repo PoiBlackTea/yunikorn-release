@@ -33,6 +33,9 @@ targets = {"adm_image": "admission",
            "sched_image": "scheduler"}
 # registry setting passed to Makefile to allow testing of the script
 repository = "apache"
+# Docker Hub host - images are always tagged/pushed fully-qualified under this host so
+# podman doesn't rewrite an unqualified name to "localhost/..." in its local store.
+REGISTRY_HOST = "docker.io"
 # authentication info for docker hub
 docker_user = ""
 docker_pass = ""
@@ -108,7 +111,11 @@ def load_config():
 
 # Cleanup image tag
 def remove_tag(image_name):
-    splits = image_name.split(":")
+    # the Docker Hub API path is namespace/repo, not a host-qualified reference
+    name = image_name
+    if name.startswith(REGISTRY_HOST + "/"):
+        name = name[len(REGISTRY_HOST) + 1:]
+    splits = name.split(":")
     if len(splits) != 2:
         fail("Image name is not in the required format")
     cmd = get_cmd("curl")
@@ -171,7 +178,7 @@ def login():
 
 # Create an image name based on passed in details
 def create_image_name(image, version, arch):
-    image_name = repository + "/yunikorn:" + image
+    image_name = REGISTRY_HOST + "/" + repository + "/yunikorn:" + image
     if arch != "":
         image_name += "-" + arch
     image_name += "-" + version
@@ -220,7 +227,7 @@ def build_image(base_dir, image, arch, version):
     my_env["VERSION"] = version          # force version, just be safe
     my_env["HOST_ARCH"] = arch           # the architecture override
     my_env["REPRODUCIBLE_BUILDS"] = "1"  # always use reproducible builds
-    my_env["REGISTRY"] = repository      # repository override (test only)
+    my_env["REGISTRY"] = REGISTRY_HOST + "/" + repository  # fully-qualified, avoids podman's localhost/ rewrite
     my_env["DOCKER"] = get_engine()      # pass container engine to make
     command = [cmd, "clean", image]
     # build the image using make
